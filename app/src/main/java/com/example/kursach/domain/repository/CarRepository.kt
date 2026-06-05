@@ -7,4 +7,8 @@ interface CarRepository {
     suspend fun getCars(): List<CarDto>
 
     suspend fun saveCar(carId: Long)
+
+    suspend fun getSavedCars(): List<CarDto>
+
+    suspend fun removeCar(carId: Long)
 }

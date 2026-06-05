@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,11 +22,14 @@ import com.example.kursach.data.remote.dto.CarDto
 
 @Composable
 fun CarDetailsScreen(
-    car: CarDto
+    car: CarDto,
+    viewModel: SavedCarsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
 
     val green = Color(0xFF2E7D32)
     val lightGreen = Color(0xFFE8F5E9)
+
+    val isSaved = viewModel.isSaved(car.id)
 
     Column(
         modifier = Modifier
@@ -53,12 +58,8 @@ fun CarDetailsScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
 
-                Spacer(Modifier.height(8.dp))
 
-                Text(
-                    text = "Год выпуска: ${car.year}"
-                )
-
+                Text("Год выпуска: ${car.year}")
                 Spacer(Modifier.height(8.dp))
 
                 Text(
@@ -69,10 +70,28 @@ fun CarDetailsScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = car.description
-                )
+                Text(car.description)
             }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            onClick = {
+                if (!isSaved) {
+                    viewModel.addCar(car.id)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isSaved) Color.Gray else green
+            )
+        ) {
+            Text(
+                text = if (isSaved) "Добавлено" else "Добавить"
+            )
         }
     }
 }
