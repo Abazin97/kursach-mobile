@@ -1,6 +1,7 @@
 package com.example.kursach.ui.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -23,10 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.kursach.navigation.Screen
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    navController: NavController
 ) {
 
     val cars = viewModel.cars.value
@@ -49,60 +55,98 @@ fun HomeScreen(
         items(cars) { car ->
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+
+                        navController
+                            .currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(
+                                "car",
+                                car
+                            )
+
+                        navController.navigate(
+                            Screen.CarDetails.route
+                        )
+                    },
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFC8E6C9)
                 )
             ) {
 
-                Column(
-                    modifier = Modifier.padding(16.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
 
-                    Text(
-                        text = "${car.brand} ${car.model}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = green
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Год выпуска: ${car.year}",
-                        color = Color.DarkGray
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Цена: ${car.price} ₽",
-                        color = green,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = car.description
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                    Column(
+                        modifier = Modifier.weight(1f)
                     ) {
 
-                        Button(
-                            onClick = {
-                                viewModel.saveCar(car.id)
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Red
+                        Text(
+                            text = "${car.brand} ${car.model}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = green
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Год выпуска: ${car.year}",
+                            color = Color.DarkGray
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Цена: ${car.price} ₽",
+                            color = green,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = car.description,
+                            maxLines = 3
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Button(
+                        onClick = {
+
+                            viewModel.saveCar(car.id)
+
+                            navController
+                                .currentBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(
+                                    "car",
+                                    car
+                                )
+
+                            navController.navigate(
+                                Screen.CarDetails.route
                             )
-                        ) {
-                            Text("Добавить")
-                        }
+                        },
+                        modifier = Modifier
+                            .height(140.dp)
+                            .width(70.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red
+                        )
+                    ) {
+                        Text(
+                            text = "+",
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

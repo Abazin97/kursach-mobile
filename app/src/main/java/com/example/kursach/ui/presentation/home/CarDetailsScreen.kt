@@ -53,10 +53,6 @@ fun CarDetailsScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
 
-                Text(
-                    text = "ID: ${car.id}"
-                )
-
                 Spacer(Modifier.height(8.dp))
 
                 Text(

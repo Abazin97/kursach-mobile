@@ -6,10 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.kursach.data.remote.dto.CarDto
 import com.example.kursach.domain.auth.AuthState
 import com.example.kursach.ui.LoginScreen
 import com.example.kursach.ui.RegisterScreen
 import com.example.kursach.ui.presentation.auth.AuthViewModel
+import com.example.kursach.ui.presentation.home.CarDetailsScreen
 import com.example.kursach.ui.presentation.home.HomeScreen
 import com.example.kursach.ui.presentation.home.HomeViewModel
 import com.example.kursach.ui.presentation.list.ListScreen
@@ -34,6 +36,19 @@ fun NavGraph(
 
         composable(Screen.List.route) {
             ListScreen()
+        }
+
+        composable(Screen.CarDetails.route) {
+
+            val car =
+                navController
+                    .previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<CarDto>("car")
+
+            car?.let {
+                CarDetailsScreen(it)
+            }
         }
 
         composable(Screen.Profile.route) {
@@ -97,7 +112,8 @@ fun NavGraph(
 //            }
 
             HomeScreen(
-                viewModel = homeViewModel
+                viewModel = homeViewModel,
+                navController = navController
             )
         }
     }

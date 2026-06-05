@@ -1,5 +1,9 @@
 package com.example.kursach.data.remote.dto
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class CarDto(
     val id: Long,
     val brand: String,
@@ -7,4 +11,4 @@ data class CarDto(
     val year: Int,
     val price: Long,
     val description: String
-)
+) : Parcelable

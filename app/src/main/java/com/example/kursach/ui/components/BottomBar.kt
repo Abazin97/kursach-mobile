@@ -34,13 +34,7 @@ fun BottomBar(navController: NavController) {
                     }
                 },
                 label = {
-                    Text(
-                        when (screen) {
-                            Screen.Home -> "Главная"
-                            Screen.List -> "Каталог"
-                            Screen.Profile -> "Профиль"
-                        }
-                    )
+                    Text(screen.title)
                 },
                 icon = {
                     Icon(
